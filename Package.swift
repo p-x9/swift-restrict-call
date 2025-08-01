@@ -25,5 +25,12 @@ let package = Package(
                 .product(name: "SwiftIndexStore", package: "swift-indexstore"),
             ]
         ),
+        .target(
+            name: "RestrictCallCore",
+            dependencies: [
+                .product(name: "ArgumentParser", package: "swift-argument-parser"),
+                .product(name: "SwiftIndexStore", package: "swift-indexstore"),
+            ]
+        ),
     ]
 )
