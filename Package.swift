@@ -3,7 +3,10 @@
 import PackageDescription
 
 let package = Package(
-    name: "restrict-call",
+    name: "swift-restrict-call",
+    platforms: [
+        .macOS(.v13)
+    ],
     dependencies: [
         .package(
             url: "https://github.com/apple/swift-argument-parser.git",
