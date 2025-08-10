@@ -17,23 +17,7 @@ public struct CallbackReporter: ReporterProtocol {
         self.callback = callback
     }
 
-    public func report(
-        file: String,
-        line: Int,
-        character: Int? = nil,
-        type: ReportType,
-        content: String
-    ) {
-        callback(
-            .init(
-                position: .init(
-                    file: file,
-                    line: line,
-                    character: character
-                ),
-                type: type,
-                content: content
-            )
-        )
+    public func report(_ report: Report) {
+        callback(report)
     }
 }

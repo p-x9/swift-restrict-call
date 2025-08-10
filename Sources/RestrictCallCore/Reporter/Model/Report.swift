@@ -10,9 +10,9 @@ import Foundation
 
 public struct Report: Sendable, Codable, Equatable {
     public struct Position: Sendable, Codable, Equatable {
-        public let file: String
-        public let line: Int
-        public let character: Int?
+        public let file: String?
+        public let line: Int?
+        public let column: Int?
     }
 
     public let position: Position

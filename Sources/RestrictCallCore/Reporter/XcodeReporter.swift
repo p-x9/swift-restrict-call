@@ -12,16 +12,24 @@ public struct XcodeReporter: ReporterProtocol {
     public init() {}
     
     public func report(
-        file: String,
-        line: Int,
-        character: Int? = nil,
-        type: ReportType,
-        content: String
+        _ report: Report
     ) {
-        if let character {
-            print("\(file):\(line):\(character): \(type): \(content)")
+        let type = report.type
+        let position = report.position
+        let content = report.content
+
+        if let file = position.file {
+            if let line = position.line {
+                if let column = position.column {
+                    print("\(file):\(line):\(column): \(type): \(content)")
+                } else {
+                    print("\(file):\(line): \(type): \(content)")
+                }
+            } else {
+                print("\(file): \(type): \(content)")
+            }
         } else {
-            print("\(file):\(line): \(type): \(content)")
+            print("\(type): \(content)")
         }
     }
 }
