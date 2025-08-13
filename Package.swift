@@ -20,6 +20,10 @@ let package = Package(
             url: "https://github.com/kateinoigakukun/swift-indexstore.git",
             from: "0.3.0"
         ),
+        .package(
+            url: "https://github.com/p-x9/swift-source-reporter.git",
+            from: "0.2.0"
+        ),
     ],
     targets: [
         .executableTarget(
@@ -37,6 +41,7 @@ let package = Package(
                 .product(name: "SwiftSyntax", package: "swift-syntax"),
                 .product(name: "SwiftParser", package: "swift-syntax"),
                 .product(name: "SwiftSyntaxBuilder", package: "swift-syntax"),
+                .product(name: "SourceReporter", package: "swift-source-reporter"),
             ]
         ),
     ]

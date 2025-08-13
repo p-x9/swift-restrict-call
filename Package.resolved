@@ -1,5 +1,5 @@
 {
-  "originHash" : "7def6317b7971dd74acdd08c27b3087c83e9e79f48199b43a804fa032d28b077",
+  "originHash" : "1dbd9d8439b963807504bb024b83bbb790641ce8ebee2a35893976b9339c1b6c",
   "pins" : [
     {
       "identity" : "swift-argument-parser",
@@ -17,6 +17,15 @@
       "state" : {
         "revision" : "055264ececff53c1265c2b7ee3513053b02604de",
         "version" : "0.4.0"
+      }
+    },
+    {
+      "identity" : "swift-source-reporter",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/p-x9/swift-source-reporter.git",
+      "state" : {
+        "revision" : "702db03a2b7277e89f5859dd7b260160636d1187",
+        "version" : "0.2.0"
       }
     },
     {
