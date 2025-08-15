@@ -7,6 +7,16 @@ let package = Package(
     platforms: [
         .macOS(.v13)
     ],
+    products: [
+        .plugin(
+            name: "RestrictCallBuildToolPlugin",
+            targets: ["RestrictCallBuildToolPlugin"]
+        ),
+        .executable(
+            name: "restrict-call",
+            targets: ["restrict-call"]
+        )
+    ],
     dependencies: [
         .package(
             url: "https://github.com/apple/swift-argument-parser.git",
@@ -41,6 +51,13 @@ let package = Package(
                 .product(name: "ArgumentParser", package: "swift-argument-parser"),
                 .product(name: "SwiftIndexStore", package: "swift-indexstore"),
                 .product(name: "SourceReporter", package: "swift-source-reporter"),
+            ]
+        ),
+        .plugin(
+            name: "RestrictCallBuildToolPlugin",
+            capability: .buildTool(),
+            dependencies: [
+                "restrict-call"
             ]
         ),
     ]
