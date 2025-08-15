@@ -25,3 +25,23 @@ extension IndexStoreSymbol {
         return stdlib_demangleName(usr)
     }
 }
+
+extension IndexStoreSymbol {
+    public func matches(
+        target: RestrictedTarget
+    ) -> Bool {
+        let demangledName = demangledName ?? name ?? usr ?? ""
+        if demangledName.matches(pattern: target.demangledName) {
+            return true
+        }
+        let prefix = [target.module, target.type].compactMap(\.self).joined(separator: ".")
+        if let name,
+           !prefix.isEmpty,
+           demangledName.hasPrefix(prefix),
+           name.matches(pattern: target.name)
+        {
+            return true
+        }
+        return false
+    }
+}

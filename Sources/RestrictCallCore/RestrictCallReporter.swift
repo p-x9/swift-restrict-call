@@ -61,7 +61,9 @@ extension RestrictCallReporter {
         let demangledName = symbol.demangledName ?? symbol.name ?? ""
 
         for target in self.targets {
-            guard demangledName.matches(pattern: target.demangledName) else {
+            let roles = occurrence.roles
+            guard symbol.matches(target: target),
+                  roles.contains([.reference, .call]) else {
                 continue
             }
             reporter.report(
@@ -69,7 +71,7 @@ extension RestrictCallReporter {
                 line: numericCast(occurrence.location.line),
                 column: numericCast(occurrence.location.column),
                 type: target.reportType ?? defaultReportType,
-                content: "[restrict-call] `\(demangledName)` calls are restricted"
+                content: "[restrict-call] `\(target.demangledName)` calls are restricted."
             )
             break
         }

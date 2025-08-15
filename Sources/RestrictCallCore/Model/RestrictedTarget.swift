@@ -14,6 +14,18 @@ public struct RestrictedTarget: Codable {
     public let module: String?
     public let type: String?
     public let name: String
+
+    public init(
+        reportType: ReportType?,
+        module: String?,
+        type: String?,
+        name: String
+    ) {
+        self.reportType = reportType
+        self.module = module
+        self.type = type
+        self.name = name
+    }
 }
 
 extension RestrictedTarget {
