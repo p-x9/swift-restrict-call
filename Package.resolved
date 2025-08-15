@@ -1,5 +1,5 @@
 {
-  "originHash" : "1dbd9d8439b963807504bb024b83bbb790641ce8ebee2a35893976b9339c1b6c",
+  "originHash" : "5df3a919a9f5dd17f896e369713a343c155fb4622aad89f536ea8f9607c53124",
   "pins" : [
     {
       "identity" : "swift-argument-parser",
@@ -29,12 +29,12 @@
       }
     },
     {
-      "identity" : "swift-syntax",
+      "identity" : "yams",
       "kind" : "remoteSourceControl",
-      "location" : "https://github.com/swiftlang/swift-syntax.git",
+      "location" : "https://github.com/jpsim/Yams.git",
       "state" : {
-        "revision" : "f99ae8aa18f0cf0d53481901f88a0991dc3bd4a2",
-        "version" : "601.0.1"
+        "revision" : "3d6871d5b4a5cd519adf233fbb576e0a2af71c17",
+        "version" : "5.4.0"
       }
     }
   ],
