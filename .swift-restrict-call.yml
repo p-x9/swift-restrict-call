@@ -1,0 +1,12 @@
+defaultReportType: warning
+targets:
+  - reportType: error
+    module: "Foundation"
+    type: "URL"
+    name: "init\\(string:\\)"
+  - reportType: error
+    module: "Foundation"
+    type: "URL"
+    name: "path$"
+excludedFiles:
+  - ".*/DerivedData/.*"
