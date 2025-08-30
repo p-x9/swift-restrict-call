@@ -35,8 +35,10 @@ public final class RestrictCallReporter {
 extension RestrictCallReporter {
     public func run() throws {
         try indexStore.forEachUnits(includeSystem: false) { unit in
+            guard shouldReport(for: unit) else { return true }
             try indexStore.forEachRecordDependencies(for: unit) { dependency in
-                guard case let .record(record) = dependency else {
+                guard case let .record(record) = dependency,
+                      shouldReport(for: record) else {
                     return true
                 }
                 try indexStore.forEachOccurrences(for: record) { occurrence in
@@ -51,12 +53,17 @@ extension RestrictCallReporter {
 }
 
 extension RestrictCallReporter {
-    private func reportIfNeeded(for occurrence: IndexStoreOccurrence) {
-        if let path = occurrence.location.path,
-           excludedFiles.contains(where: { path.matches(pattern: $0) }) {
-            return
-        }
+    private func shouldReport(for unit: IndexStoreUnit) -> Bool {
+        let moduleName = try? indexStore.moduleName(for: unit)
+        if filterModules.isEmpty { return true }
+        return filterModules.contains(moduleName)
+    }
 
+    private func shouldReport(for record: IndexStoreUnit.Dependency.Record) -> Bool {
+        !excludedFiles.contains(where: { record.filePath?.matches(pattern: $0) ?? true })
+    }
+
+    private func reportIfNeeded(for occurrence: IndexStoreOccurrence) {
         let symbol = occurrence.symbol
         let demangledName = symbol.demangledName ?? symbol.name ?? ""
 
@@ -75,5 +82,11 @@ extension RestrictCallReporter {
             )
             break
         }
+    }
+}
+
+extension RestrictCallReporter {
+    var filterModules: [String?] {
+        targets.map(\.module)
     }
 }
