@@ -5,7 +5,7 @@ import Yams
 import SourceReporter
 import RestrictCallCore
 
-struct restrict_call: ParsableCommand {
+struct restrict_call: AsyncParsableCommand {
     static let configuration: CommandConfiguration = .init(
         commandName: "restrict-call",
         abstract: "Reports and restricts calls to specific methods/properties.",
@@ -41,7 +41,7 @@ struct restrict_call: ParsableCommand {
         }
     }()
 
-    mutating func run() throws {
+    mutating func run() async throws {
         guard let indexStore else {
             fatalError("No IndexStore found at specified path or in environment variable BUILD_DIR")
         }
@@ -53,7 +53,7 @@ struct restrict_call: ParsableCommand {
             excludedFiles: excludedFiles,
             indexStore: indexStore
         )
-        try reporter.run()
+        try await reporter.runConcurrently()
     }
 }
 
@@ -89,5 +89,7 @@ extension restrict_call {
             .path()
     }
 }
+
+extension XcodeReporter: @retroactive @unchecked Sendable {}
 
 restrict_call.main()

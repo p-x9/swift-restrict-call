@@ -7,19 +7,19 @@
 //
 
 import Foundation
-import SwiftIndexStore
+@preconcurrency import SwiftIndexStore
 import SourceReporter
 
-public final class RestrictCallReporter {
+public final class RestrictCallReporter: Sendable {
     public let defaultReportType: ReportType
-    public let reporter: any ReporterProtocol
+    public let reporter: any (ReporterProtocol & Sendable)
     public let targets: [RestrictedTarget]
     public let excludedFiles: [String]
     public let indexStore: IndexStore
 
     public init(
         defaultReportType: ReportType,
-        reporter: any ReporterProtocol,
+        reporter: any (ReporterProtocol & Sendable),
         targets: [RestrictedTarget],
         excludedFiles: [String],
         indexStore: IndexStore
@@ -50,6 +50,25 @@ extension RestrictCallReporter {
             return true
         } // forEachUnits
     }
+
+    public func runConcurrently() async throws {
+        let units = indexStore.units(includeSystem: false)
+
+        try await units.concurrentForEach { unit in
+            guard try self.shouldReport(for: unit) else { return }
+            try self.indexStore.forEachRecordDependencies(for: unit) { dependency in
+                guard case let .record(record) = dependency,
+                      self.shouldReport(for: record) else {
+                    return true
+                }
+                try self.indexStore.forEachOccurrences(for: record) { occurrence in
+                    self.reportIfNeeded(for: occurrence)
+                    return true
+                } // forEachOccurrences
+                return true
+            } // forEachRecordDependencies
+        }
+    }
 }
 
 extension RestrictCallReporter {
@@ -64,7 +83,6 @@ extension RestrictCallReporter {
 
     private func reportIfNeeded(for occurrence: IndexStoreOccurrence) {
         let symbol = occurrence.symbol
-        let demangledName = symbol.demangledName ?? symbol.name ?? ""
 
         for target in self.targets {
             let roles = occurrence.roles
@@ -80,6 +98,21 @@ extension RestrictCallReporter {
                 content: "[restrict-call] `\(target.demangledName)` calls are restricted."
             )
             break
+        }
+    }
+}
+
+extension Array {
+    func concurrentForEach(
+        _ body: @escaping @Sendable (Element) async throws -> Void
+    ) async throws where Element: Sendable {
+        try await withThrowingTaskGroup(of: Void.self) { group in
+            for element in self {
+                group.addTask {
+                    try await body(element)
+                }
+            }
+            try await group.waitForAll()
         }
     }
 }
