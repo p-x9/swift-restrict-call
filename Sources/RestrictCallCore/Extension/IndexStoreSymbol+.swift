@@ -31,7 +31,7 @@ extension IndexStoreSymbol {
         target: RestrictedTarget
     ) -> Bool {
         let demangledName = demangledName ?? name ?? usr ?? ""
-        if demangledName.matches(pattern: target.demangledName) {
+        if demangledName.matches(pattern: target.demangledNamePattern) {
             return true
         }
         let prefix = [target.module, target.type].compactMap(\.self).joined(separator: ".")

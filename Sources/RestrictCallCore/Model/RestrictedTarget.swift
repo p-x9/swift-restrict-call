@@ -9,7 +9,7 @@
 import Foundation
 import SourceReporter
 
-public struct RestrictedTarget: Codable {
+public struct RestrictedTarget: Sendable, Codable {
     public let reportType: ReportType?
     public let module: String?
     public let type: String?
@@ -29,9 +29,9 @@ public struct RestrictedTarget: Codable {
 }
 
 extension RestrictedTarget {
-    var demangledName: String {
+    var demangledNamePattern: String {
         [module, type, name]
             .compactMap { $0 }
-            .joined(separator: ".")
+            .joined(separator: "\\.")
     }
 }
