@@ -29,7 +29,7 @@ public struct RestrictedTarget: Sendable, Codable {
 }
 
 extension RestrictedTarget {
-    var demangledName: String {
+    var demangledNamePattern: String {
         [module, type, name]
             .compactMap { $0 }
             .joined(separator: "\\.")

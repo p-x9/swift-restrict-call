@@ -95,7 +95,7 @@ extension RestrictCallReporter {
                 line: numericCast(occurrence.location.line),
                 column: numericCast(occurrence.location.column),
                 type: target.reportType ?? defaultReportType,
-                content: "[restrict-call] `\(target.demangledName)` calls are restricted."
+                content: "[restrict-call] `\(target.demangledNamePattern)` calls are restricted."
             )
             break
         }
