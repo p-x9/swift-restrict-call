@@ -91,12 +91,14 @@ extension RestrictCallReporter {
             return false
         }
 
-        if let onlyModules,
-           !onlyModules.contains(module ?? "") {
-            return false
+        if let onlyModules {
+            guard let module else { return false }
+            if !onlyModules.contains(module) {
+                return false
+            }
         }
 
-        if excludeModules.contains(module ?? "") {
+        if let module, excludeModules.contains(module) {
             return false
         }
 
