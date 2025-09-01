@@ -3,7 +3,7 @@
 //  swift-restrict-call
 //
 //  Created by p-x9 on 2025/08/15
-//  
+//
 //
 
 import Foundation
@@ -13,8 +13,13 @@ import SourceReporter
 public final class RestrictCallReporter: Sendable {
     public let defaultReportType: ReportType
     public let reporter: any (ReporterProtocol & Sendable)
+
     public let targets: [RestrictedTarget]
+
     public let excludedFiles: [String]
+    public let onlyModules: [String]?
+    public let excludeModules: [String]
+
     public let indexStore: IndexStore
 
     public init(
@@ -22,12 +27,16 @@ public final class RestrictCallReporter: Sendable {
         reporter: any (ReporterProtocol & Sendable),
         targets: [RestrictedTarget],
         excludedFiles: [String],
+        onlyModules: [String]?,
+        excludeModules: [String],
         indexStore: IndexStore
     ) {
         self.defaultReportType = defaultReportType
         self.reporter = reporter
         self.targets = targets
         self.excludedFiles = excludedFiles
+        self.onlyModules = onlyModules
+        self.excludeModules = excludeModules
         self.indexStore = indexStore
     }
 }
@@ -74,7 +83,24 @@ extension RestrictCallReporter {
 extension RestrictCallReporter {
     private func shouldReport(for unit: IndexStoreUnit) throws -> Bool {
         let path = try indexStore.mainFilePath(for: unit)
-        return !excludedFiles.contains(where: { path?.matches(pattern: $0) ?? true })
+        let module = try indexStore.moduleName(for: unit)
+
+        if excludedFiles.contains(
+            where: { path?.matches(pattern: $0) ?? true }
+        ) {
+            return false
+        }
+
+        if let onlyModules,
+           !onlyModules.contains(module ?? "") {
+            return false
+        }
+
+        if excludeModules.contains(module ?? "") {
+            return false
+        }
+
+        return true
     }
 
     private func shouldReport(for record: IndexStoreUnit.Dependency.Record) -> Bool {
