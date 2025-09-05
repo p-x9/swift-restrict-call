@@ -95,6 +95,8 @@ extension restrict_call {
 
         targets = config.targets
         excludedFiles = config.excludedFiles ?? []
+        onlyModules = config.onlyModules
+        excludeModules = config.excludeModules ?? []
 
         if reportType == nil {
             self.reportType = config.defaultReportType
