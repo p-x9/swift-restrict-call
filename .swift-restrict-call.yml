@@ -8,5 +8,13 @@ targets:
     module: "Foundation"
     type: "URL"
     name: "path$"
+  - reportType: error
+    module: "Foundation"
+    type: "String"
+    name: "init\\(data"
+# onlyModules:
+#   - RestrictCallCore
+# excludeModules:
+#   - restrict-call
 excludedFiles:
   - ".*/DerivedData/.*"

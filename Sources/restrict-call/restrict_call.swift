@@ -31,6 +31,8 @@ struct restrict_call: ParsableCommand {
 
     var targets: [RestrictedTarget] = []
     var excludedFiles: [String] = []
+    var onlyModules: [String]? = nil
+    var excludeModules: [String] = []
 
     lazy var indexStore: IndexStore? = {
         if let indexStorePath = indexStorePath ?? environmentIndexStorePath,
@@ -52,6 +54,8 @@ struct restrict_call: ParsableCommand {
             reporter: XcodeReporter(),
             targets: targets,
             excludedFiles: excludedFiles,
+            onlyModules: onlyModules,
+            excludeModules: excludeModules,
             indexStore: indexStore
         )
         try reporter.run()
@@ -70,6 +74,8 @@ extension restrict_call: AsyncParsableCommand {
             reporter: XcodeReporter(),
             targets: targets,
             excludedFiles: excludedFiles,
+            onlyModules: onlyModules,
+            excludeModules: excludeModules,
             indexStore: indexStore
         )
         try await reporter.runConcurrently()
@@ -89,6 +95,8 @@ extension restrict_call {
 
         targets = config.targets
         excludedFiles = config.excludedFiles ?? []
+        onlyModules = config.onlyModules
+        excludeModules = config.excludeModules ?? []
 
         if reportType == nil {
             self.reportType = config.defaultReportType
