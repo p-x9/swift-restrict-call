@@ -34,6 +34,7 @@ extension IndexStoreSymbol {
         if demangledName.matches(pattern: target.demangledNamePattern) {
             return true
         }
+
         let prefix = [target.module, target.type].compactMap(\.self).joined(separator: ".")
         if let name,
            !prefix.isEmpty,
@@ -42,6 +43,14 @@ extension IndexStoreSymbol {
         {
             return true
         }
+
+        if let name,
+           let targetModule = target.module,
+           demangledName.hasPrefix("(extension in \(targetModule))"),
+           name.matches(pattern: target.name) {
+            return true
+        }
+
         return false
     }
 }
